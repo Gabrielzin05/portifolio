@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PROTOCOLO GABRIEL - BATCAVE ACCESS</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: #00ffcc;
+      height: 100vh;
+      overflow: hidden;
+      font-family: 'Share Tech Mono', monospace;
+      position: relative;
+    }
+
+    /* Fundo animado com linhas de código */
+    .matrix-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(ellipse at center, rgba(0, 20, 40, 0.8) 0%, rgba(0, 0, 0, 0.9) 70%),
+        linear-gradient(90deg, transparent 79px, rgba(0, 255, 204, 0.03) 81px, transparent 82px),
+        linear-gradient(rgba(0, 255, 204, 0.03) 50%, transparent 50%);
+      background-size: 100% 100%, 82px 82px, 82px 82px;
+      z-index: -2;
+    }
+
+    /* Partículas flutuantes */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #00ffcc;
+      border-radius: 50%;
+      animation: float-particle 8s infinite linear;
+      opacity: 0.6;
+    }
+
+    @keyframes float-particle {
+      0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) translateX(50px); opacity: 0; }
+    }
+
+    #login-screen {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Título principal */
+    .titulo {
+      position: absolute;
+      top: 8%;
+      width: 100%;
+      text-align: center;
+      font-family: 'Orbitron', monospace;
+      font-size: 3rem;
+      font-weight: 900;
+      color: #00ffcc;
+      letter-spacing: 5px;
+      text-shadow: 
+        0 0 10px #00ffcc,
+        0 0 20px #00ffcc,
+        0 0 30px #00ffcc;
+      animation: title-glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes title-glow {
+      from { 
+        text-shadow: 
+          0 0 10px #00ffcc,
+          0 0 20px #00ffcc,
+          0 0 30px #00ffcc;
+      }
+      to { 
+        text-shadow: 
+          0 0 5px #00ffcc,
+          0 0 15px #00ffcc,
+          0 0 25px #00ffcc,
+          0 0 35px #00ffcc;
+      }
+    }
+
+    /* Container do scanner principal */
+    .scanner-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: -5%;
+    }
+
+    /* Scanner exterior */
+    .scanner-outer {
+      width: 300px;
+      height: 300px;
+      border: 3px solid #00ffcc;
+      border-radius: 50%;
+      position: relative;
+      animation: rotate-outer 10s infinite linear;
+      box-shadow: 
+        0 0 30px #00ffcc,
+        inset 0 0 30px rgba(0, 255, 204, 0.1);
+    }
+
+    .scanner-outer::before {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      right: -3px;
+      bottom: -3px;
+      border: 1px solid rgba(0, 255, 204, 0.3);
+      border-radius: 50%;
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+
+    /* Scanner médio */
+    .scanner-middle {
+      width: 200px;
+      height: 200px;
+      border: 2px solid #0066ff;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate-middle 8s infinite linear reverse;
+      box-shadow: 
+        0 0 20px #0066ff,
+        inset 0 0 20px rgba(0, 102, 255, 0.1);
+    }
+
+    /* Scanner interno */
+    .scanner-inner {
+      width: 120px;
+      height: 120px;
+      border: 2px solid #ff6600;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: rotate-inner 6s infinite linear;
+      box-shadow: 
+        0 0 15px #ff6600,
+        inset 0 0 15px rgba(255, 102, 0, 0.1);
+    }
+
+    /* Core central do scanner */
+    .scanner-core {
+      width: 60px;
+      height: 60px;
+      background: radial-gradient(circle, #00ffcc 0%, #0066ff 50%, #000 100%);
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 
+        0 0 20px #00ffcc,
+        inset 0 0 10px #000;
+      animation: pulse-core 1.5s infinite ease-in-out;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .scanner-core::before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #fff;
+      animation: core-flash 2s infinite ease-in-out;
+    }
+
+    /* Linhas de scan */
+    .scan-line {
+      position: absolute;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00ffcc, transparent);
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      animation: scan-sweep 3s infinite ease-in-out;
+      opacity: 0.8;
+    }
+
+    .scan-line-vertical {
+      position: absolute;
+      width: 2px;
+      height: 100%;
+      background: linear-gradient(0deg, transparent, #0066ff, transparent);
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      animation: scan-sweep-vertical 2.5s infinite ease-in-out;
+      opacity: 0.6;
+    }
+
+    /* Elementos decorativos estilo Batman */
+    .batman-elements {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .corner-bracket {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border: 2px solid #00ffcc;
+    }
+
+    .corner-bracket.top-left {
+      top: 0;
+      left: 0;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .corner-bracket.top-right {
+      top: 0;
+      right: 0;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    .corner-bracket.bottom-left {
+      bottom: 0;
+      left: 0;
+      border-right: none;
+      border-top: none;
+    }
+
+    .corner-bracket.bottom-right {
+      bottom: 0;
+      right: 0;
+      border-left: none;
+      border-top: none;
+    }
+
+    /* Dados do sistema */
+    .system-data {
+      position: absolute;
+      top: 15%;
+      right: 5%;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9rem;
+      opacity: 0.7;
+      text-align: right;
+    }
+
+    .data-line {
+      margin-bottom: 5px;
+      animation: data-flicker 4s infinite ease-in-out;
+    }
+
+    .data-line:nth-child(odd) {
+      animation-delay: 0.5s;
+    }
+
+    /* Terminal */
+    .terminal {
+      position: absolute;
+      bottom: 10%;
+      left: 5%;
+      right: 5%;
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid #00ffcc;
+      border-radius: 5px;
+      padding: 20px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.1rem;
+      box-shadow: 0 0 20px rgba(0, 255, 204, 0.3);
+    }
+
+    .terminal-header {
+      color: #ff6600;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .typing {
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid #00ffcc;
+      width: 0;
+      animation: typing 3s steps(30, end) forwards, blink 0.7s infinite;
+    }
+
+    /* Barras de progresso */
+    .progress-container {
+      position: absolute;
+      bottom: 25%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 300px;
+      display: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: rgba(0, 255, 204, 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00ffcc, #0066ff);
+      width: 0%;
+      animation: progress-fill 2s ease-out forwards;
+      box-shadow: 0 0 10px #00ffcc;
+    }
+
+    .progress-label {
+      font-size: 0.8rem;
+      color: #00ffcc;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    /* Animações */
+    @keyframes rotate-outer {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes rotate-middle {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(-360deg); }
+    }
+
+    @keyframes rotate-inner {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { 
+        transform: scale(1);
+        opacity: 0.3;
+      }
+      50% { 
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
+
+    @keyframes pulse-core {
+      0%, 100% { 
+        transform: translate(-50%, -50%) scale(1);
+        box-shadow: 0 0 20px #00ffcc, inset 0 0 10px #000;
+      }
+      50% { 
+        transform: translate(-50%, -50%) scale(1.1);
+        box-shadow: 0 0 30px #00ffcc, inset 0 0 15px #000;
+      }
+    }
+
+    @keyframes core-flash {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    @keyframes scan-sweep {
+      0% { transform: translateY(-50%) rotate(0deg); }
+      100% { transform: translateY(-50%) rotate(360deg); }
+    }
+
+    @keyframes scan-sweep-vertical {
+      0% { transform: translateX(-50%) rotate(0deg); }
+      100% { transform: translateX(-50%) rotate(360deg); }
+    }
+
+    @keyframes typing {
+      to { width: 100%; }
+    }
+
+    @keyframes blink {
+      0%, 100% { border-color: transparent; }
+      50% { border-color: #00ffcc; }
+    }
+
+    @keyframes data-flicker {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 0.3; }
+    }
+
+    @keyframes progress-fill {
+      to { width: 100%; }
+    }
+
+    /* Efeito de desfoque quando autenticado */
+    .blur-out {
+      animation: blur-fade 2s ease-out forwards;
+    }
+
+    @keyframes blur-fade {
+      to { 
+        filter: blur(20px);
+        opacity: 0;
+      }
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      .titulo {
+        font-size: 2rem;
+        letter-spacing: 3px;
+      }
+
+      .scanner-outer {
+        width: 250px;
+        height: 250px;
+      }
+
+      .scanner-middle {
+        width: 170px;
+        height: 170px;
+      }
+
+      .scanner-inner {
+        width: 100px;
+        height: 100px;
+      }
+
+      .batman-elements {
+        width: 300px;
+        height: 300px;
+      }
+
+      .system-data {
+        font-size: 0.7rem;
+        top: 20%;
+      }
+
+      .terminal {
+        font-size: 0.9rem;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="matrix-bg"></div>
+  <div class="particles" id="particles"></div>
+
+  <div id="login-screen">
+    <h1 class="titulo">PROTOCOLO GABRIEL</h1>
+
+    <!-- Dados do sistema -->
+    <div class="system-data">
+      <div class="data-line">SISTEMA: BATCAVE OS v2.1</div>
+      <div class="data-line">STATUS: SCANNER ATIVO</div>
+      <div class="data-line">MODO: SEGURANÇA MÁXIMA</div>
+      <div class="data-line">REDE: ENCRYPTED_CHANNEL</div>
+      <div class="data-line">UPTIME: 99.97%</div>
+    </div>
+
+    <!-- Scanner principal -->
+    <div class="scanner-container">
+      <div class="batman-elements">
+        <div class="corner-bracket top-left"></div>
+        <div class="corner-bracket top-right"></div>
+        <div class="corner-bracket bottom-left"></div>
+        <div class="corner-bracket bottom-right"></div>
+      </div>
+
+      <div class="scanner-outer">
+        <div class="scan-line"></div>
+        <div class="scan-line-vertical"></div>
+        
+        <div class="scanner-middle">
+          <div class="scanner-inner">
+            <div class="scanner-core"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barras de progresso -->
+    <div class="progress-container" id="progressContainer">
+      <div class="progress-label">ESCANEANDO BIOMETRIA...</div>
+      <div class="progress-bar">
+        <div class="progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Terminal -->
+    <div class="terminal">
+      <div class="terminal-header">[BATCAVE SECURITY SYSTEM]</div>
+      <p class="typing" id="terminal-text">>>> Inicializando protocolos de segurança...</p>
+    </div>
+  </div>
+
+  <script>
+    // Criar partículas
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 8 + 's';
+        particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Sequência de autenticação
+    const terminalText = document.getElementById('terminal-text');
+    const progressContainer = document.getElementById('progressContainer');
+    const loginScreen = document.getElementById('login-screen');
+
+    const messages = [
+      '>>> Inicializando protocolos de segurança...',
+      '>>> Escaneando impressão digital...',
+      '>>> Verificando padrão de íris...',
+      '>>> Análise de DNA em progresso...',
+      '>>> Scanner facial: CONFIRMADO',
+      '>>> Heartbeat pattern: MATCH',
+      '>>> Verificação de voz: APPROVED',
+      '>>> Acesso biométrico: AUTORIZADO',
+      '>>> Bem-vindo ao sistema, Gabriel.',
+      '>>> Carregando interface principal...'
+    ];
+
+    let messageIndex = 0;
+    let authenticated = false;
+
+    function typeMessage(message, callback) {
+      terminalText.textContent = '';
+      terminalText.style.width = '0';
+      terminalText.textContent = message;
+      
+      // Reset animation
+      terminalText.style.animation = 'none';
+      terminalText.offsetHeight; // Trigger reflow
+      terminalText.style.animation = 'typing 2s steps(' + message.length + ', end) forwards, blink 0.7s infinite';
+      
+      setTimeout(() => {
+        if (callback) callback();
+      }, 2500);
+    }
+
+    function nextMessage() {
+      if (messageIndex < messages.length) {
+        typeMessage(messages[messageIndex], () => {
+          messageIndex++;
+          
+          // Mostrar progresso na metade
+          if (messageIndex === 4) {
+            progressContainer.style.display = 'block';
+          }
+          
+          // Autenticação completa
+          if (messageIndex === messages.length - 1) {
+            authenticated = true;
+            setTimeout(() => {
+              loginScreen.classList.add('blur-out');
+              setTimeout(() => {
+                // Redirecionar para o painel principal
+                window.location.href = 'painel.html';
+              }, 2000);
+            }, 2000);
+          } else {
+            setTimeout(nextMessage, 1000);
+          }
+        });
+      }
+    }
+
+    // Sistema de áudio
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const sounds = {};
+
+    // Carregar sons
+    function loadSound(name, url) {
+      return fetch(url)
+        .then(response => response.arrayBuffer())
+        .then(data => audioContext.decodeAudioData(data))
+        .then(buffer => {
+          sounds[name] = buffer;
+          console.log(`✅ Som carregado: ${name}`);
+        })
+        .catch(error => {
+          console.log(`⚠️ Erro ao carregar som ${name}:`, error);
+        });
+    }
+
+    // Reproduzir som
+    function playSystemSound(type) {
+      try {
+        if (sounds[type]) {
+          const source = audioContext.createBufferSource();
+          const gainNode = audioContext.createGain();
+          
+          source.buffer = sounds[type];
+          source.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          // Volume ajustável
+          gainNode.gain.value = 0.3;
+          
+          source.start();
+          console.log(`🔊 [BATCAVE] ${type.toUpperCase()} REPRODUZIDO`);
+        } else {
+          console.log(`🔊 [BATCAVE] ${type.toUpperCase()} - SOM NÃO ENCONTRADO`);
+        }
+      } catch (error) {
+        console.log(`⚠️ Erro ao reproduzir som ${type}:`, error);
+      }
+    }
+
+    // Carregar todos os sons
+    async function initAudio() {
+      try {
+        await loadSound('scanner_start', 'sounds/scanner_start.mp3');
+        await loadSound('biometric_scan', 'sounds/biometric_scan.mp3');
+        await loadSound('access_granted', 'sounds/access_granted.mp3');
+        await loadSound('emergency_override', 'sounds/emergency_override.mp3');
+        await loadSound('manual_scan', 'sounds/manual_scan.mp3');
+        console.log('🎵 Sistema de áudio inicializado!');
+      } catch (error) {
+        console.log('⚠️ Erro ao inicializar áudio:', error);
+      }
+    }
+
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      
+      // Inicializar contexto de áudio (precisa de interação do usuário)
+      setTimeout(() => {
+        console.log('🎵 Sistema de áudio carregado! Clique para ativar.');
+      }, 1000);
+      
+      // Tema do Batman de fundo (começa após 2 segundos)
+      setTimeout(() => playSystemSound('batman_theme'), 2000);
+      
+      // Efeitos sonoros da sequência
+      setTimeout(() => playSystemSound('scanner_start'), 3000);
+      setTimeout(() => playSystemSound('biometric_scan'), 6000);
+      setTimeout(() => playSystemSound('biometric_scan'), 10000);
+      setTimeout(() => playSystemSound('biometric_scan'), 14000);
+      setTimeout(() => playSystemSound('access_granted'), 18000);
+      
+      // Iniciar sequência
+      setTimeout(nextMessage, 2000);
+    });
+
+    // Detectar clique para acelerar (Easter egg)
+    let clickCount = 0;
+    document.addEventListener('click', function() {
+      clickCount++;
+      if (clickCount >= 3 && !authenticated) {
+        playSystemSound('emergency_override');
+        terminalText.textContent = '>>> OVERRIDE DETECTADO - Acesso de emergência ativado!';
+        setTimeout(() => {
+          playSystemSound('transition');
+          loginScreen.classList.add('blur-out');
+          setTimeout(() => {
+            window.location.href = 'painel.html';
+          }, 1000);
+        }, 1000);
+      }
+    });
+
+    // Efeitos de teclado
+    document.addEventListener('keydown', function(e) {
+      if (e.code === 'Space' && !authenticated) {
+        playSystemSound('manual_scan');
+        console.log('🔍 [BATCAVE] Scan manual ativado');
+      }
+    });
+  </script>
+</body>
+</html>
