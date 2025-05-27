@@ -982,10 +982,9 @@
       const btnText = document.getElementById('loginBtnText');
       const accessBtn = document.querySelector('.access-btn');
 
-      if (username === 'gabriel' && password === 'urbano') {
-        btnText.innerHTML = '<div class="loading"></div> INICIALIZANDO...';
-        accessBtn.disabled = true;
-
+     if (username && password) {
+    btnText.innerHTML = '<div class="loading"></div> INICIALIZANDO...';
+    accessBtn.disabled = true;
         setTimeout(() => {
           document.getElementById('loginScreen').style.opacity = '0';
           setTimeout(() => {
